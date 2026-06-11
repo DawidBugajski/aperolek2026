@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { isSupabaseConfigured, browserClient } from "@/lib/supabase";
 import { useReadOnly } from "@/components/ReadOnlyProvider";
 import { useIdentity } from "@/components/IdentityProvider";
+import { SkeletonList } from "@/components/Skeleton";
 import {
   getEntries,
   addEntry,
@@ -54,6 +55,7 @@ export default function EntryManager({
   const [adding, setAdding] = useState(false);
   const [form, setForm] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const refetch = useCallback(async () => {
     try {
@@ -151,11 +153,15 @@ export default function EntryManager({
 
   const remove = async (id: string) => {
     if (!confirm("Usunąć tę pozycję?")) return;
+    setDeletingId(id);
+    setError(null);
     try {
       await deleteEntry(id);
       await refetch();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Błąd usuwania.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -216,7 +222,7 @@ export default function EntryManager({
     </div>
   );
 
-  if (loading) return <p className="text-sm text-ink-soft">Wczytywanie…</p>;
+  if (loading) return <SkeletonList />;
 
   return (
     <div className="space-y-3">
@@ -250,7 +256,7 @@ export default function EntryManager({
                 <button
                   type="button"
                   onClick={() => startEdit(entry)}
-                  disabled={readOnly}
+                  disabled={readOnly || deletingId === entry.id}
                   className="text-ink-soft hover:text-terracotta disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-ink-soft"
                 >
                   edytuj
@@ -258,10 +264,10 @@ export default function EntryManager({
                 <button
                   type="button"
                   onClick={() => remove(entry.id)}
-                  disabled={readOnly}
+                  disabled={readOnly || deletingId === entry.id}
                   className="text-ink-soft/70 hover:text-wine disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  usuń
+                  {deletingId === entry.id ? "usuwanie…" : "usuń"}
                 </button>
               </div>
             </div>

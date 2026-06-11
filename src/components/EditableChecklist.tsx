@@ -6,6 +6,7 @@ import { useReadOnly } from "@/components/ReadOnlyProvider";
 import { isSupabaseConfigured, browserClient } from "@/lib/supabase";
 import { getEntries, addEntry, updateEntry, deleteEntry, type Entry } from "@/app/actions/entries";
 import { getChecks, setCheck } from "@/app/actions/checks";
+import { SkeletonList } from "@/components/Skeleton";
 
 const inputClass =
   "w-full border border-ink/25 bg-cream px-3 py-2 text-sm text-ink focus:border-terracotta focus:outline-none";
@@ -31,6 +32,8 @@ export default function EditableChecklist({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [text, setText] = useState("");
   const [detail, setDetail] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const loadItems = useCallback(async () => {
     try {
@@ -124,10 +127,12 @@ export default function EditableChecklist({
     setAdding(false);
   };
   const save = async () => {
+    if (saving) return;
     if (!text.trim()) {
       setError("Podaj treść pozycji.");
       return;
     }
+    setSaving(true);
     try {
       const data = { text: text.trim(), detail: detail.trim() };
       const by = identity?.name ?? null;
@@ -137,15 +142,21 @@ export default function EditableChecklist({
       await loadItems();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Błąd zapisu.");
+    } finally {
+      setSaving(false);
     }
   };
   const remove = async (id: string) => {
     if (!confirm("Usunąć pozycję?")) return;
+    setDeletingId(id);
+    setError(null);
     try {
       await deleteEntry(id);
       await loadItems();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Błąd usuwania.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -163,7 +174,7 @@ export default function EditableChecklist({
       </p>
     );
   }
-  if (loading) return <p className="text-sm text-ink-soft">Wczytywanie…</p>;
+  if (loading) return <SkeletonList />;
 
   const form = (
     <div className="postcard space-y-2 p-3">
@@ -183,9 +194,10 @@ export default function EditableChecklist({
         <button
           type="button"
           onClick={save}
-          className="border-2 border-ink/40 bg-terracotta px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-cream"
+          disabled={saving}
+          className="border-2 border-ink/40 bg-terracotta px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-cream disabled:opacity-50"
         >
-          Zapisz
+          {saving ? "Zapisywanie…" : "Zapisz"}
         </button>
         <button
           type="button"
@@ -232,7 +244,7 @@ export default function EditableChecklist({
               <button
                 type="button"
                 onClick={() => startEdit(it)}
-                disabled={readOnly}
+                disabled={readOnly || deletingId === it.id}
                 className="text-ink-soft hover:text-terracotta disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-ink-soft"
               >
                 edytuj
@@ -240,10 +252,10 @@ export default function EditableChecklist({
               <button
                 type="button"
                 onClick={() => remove(it.id)}
-                disabled={readOnly}
+                disabled={readOnly || deletingId === it.id}
                 className="text-ink-soft/70 hover:text-wine disabled:cursor-not-allowed disabled:opacity-40"
               >
-                usuń
+                {deletingId === it.id ? "usuwanie…" : "usuń"}
               </button>
             </span>
           </div>

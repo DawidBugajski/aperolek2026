@@ -132,7 +132,7 @@ export function ExpenseRow({ expense }: { expense: ExpenseData }) {
         <button
           type="button"
           onClick={() => setEditing(true)}
-          disabled={readOnly}
+          disabled={readOnly || pending}
           className="text-xs text-ink-soft hover:text-terracotta disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-ink-soft"
         >
           edytuj
@@ -140,10 +140,10 @@ export function ExpenseRow({ expense }: { expense: ExpenseData }) {
         <button
           type="button"
           onClick={remove}
-          disabled={readOnly}
+          disabled={readOnly || pending}
           className="text-xs text-ink-soft/70 hover:text-wine disabled:cursor-not-allowed disabled:opacity-40"
         >
-          usuń
+          {pending ? "usuwanie…" : "usuń"}
         </button>
       </span>
     </div>
@@ -231,7 +231,7 @@ export function SettlementRow({ settlement }: { settlement: SettlementData }) {
         <button
           type="button"
           onClick={() => setEditing(true)}
-          disabled={readOnly}
+          disabled={readOnly || pending}
           className="text-xs text-ink-soft hover:text-terracotta disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-ink-soft"
         >
           edytuj
@@ -239,10 +239,10 @@ export function SettlementRow({ settlement }: { settlement: SettlementData }) {
         <button
           type="button"
           onClick={remove}
-          disabled={readOnly}
+          disabled={readOnly || pending}
           className="text-xs text-ink-soft/70 hover:text-wine disabled:cursor-not-allowed disabled:opacity-40"
         >
-          usuń
+          {pending ? "usuwanie…" : "usuń"}
         </button>
       </span>
     </div>

@@ -4,6 +4,7 @@ import { Fraunces } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 import IdentityBar from "@/components/IdentityBar";
+import IdentityGate from "@/components/IdentityGate";
 import { IdentityProvider } from "@/components/IdentityProvider";
 import { ReadOnlyProvider } from "@/components/ReadOnlyProvider";
 import { getRole } from "@/lib/session";
@@ -43,7 +44,9 @@ export default async function RootLayout({
         <IdentityProvider>
           <NavBar />
           <IdentityBar />
-          <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
+          <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+            <IdentityGate>{children}</IdentityGate>
+          </main>
           <footer className="border-t-2 border-ink/30 px-4 py-6 text-center">
             <p className="kicker text-[11px]">Aperolek · M·M·XX·VI</p>
             <p className="mt-2 text-sm text-ink-soft">
