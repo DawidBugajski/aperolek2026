@@ -72,3 +72,5 @@ create policy "read entries" on public.entries for select using (true);
 -- ------------------------------------------------------------
 alter publication supabase_realtime add table public.checks;
 alter publication supabase_realtime add table public.entries;
+alter publication supabase_realtime add table public.expenses;
+alter publication supabase_realtime add table public.settlements;

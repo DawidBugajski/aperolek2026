@@ -1,5 +1,6 @@
 import PageHeader from "@/components/PageHeader";
 import BudgetForm from "@/components/BudgetForm";
+import BudgetRealtime from "@/components/BudgetRealtime";
 import { ExpenseRow, SettlementRow } from "@/components/BudgetRows";
 import {
   expenses as staticExpenses,
@@ -127,6 +128,7 @@ export default async function BudzetPage() {
 
   return (
     <div>
+      {live && <BudgetRealtime />}
       <PageHeader
         emoji="💸"
         title="Budżet / rozliczenia"
