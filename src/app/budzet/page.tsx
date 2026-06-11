@@ -11,7 +11,6 @@ import { isSupabaseConfigured } from "@/lib/supabase";
 import { getBudget } from "@/app/actions/budget";
 
 export const metadata = { title: "Budżet" };
-// Czytamy z bazy na bieżąco (gdy skonfigurowana).
 export const dynamic = "force-dynamic";
 
 type Cat = keyof typeof categoryLabels;
@@ -57,7 +56,7 @@ async function loadData(): Promise<{ expenses: Exp[]; settlements: Sett[]; live:
         })),
       };
     } catch {
-      /* fallback poniżej */
+      /* fall through to static data */
     }
   }
   return {
@@ -145,7 +144,6 @@ export default async function BudzetPage() {
         </p>
       )}
 
-      {/* FAQ - jak działa budżet */}
       <details className="mb-8 rounded-2xl border border-sand-dark bg-white/70 p-4">
         <summary className="cursor-pointer font-display text-lg font-semibold text-ink">
           ❓ Jak działa budżet? (krótkie FAQ)
@@ -174,7 +172,6 @@ export default async function BudzetPage() {
         </div>
       </details>
 
-      {/* Podsumowanie */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-2xl border border-sand-dark bg-white/70 p-5 shadow-sm">
           <p className="text-sm text-ink-soft">Suma wspólnych wydatków</p>
@@ -188,7 +185,6 @@ export default async function BudzetPage() {
         </div>
       </div>
 
-      {/* Bilans osób */}
       <section className="mt-8">
         <h2 className="mb-3 font-display text-xl font-semibold text-ink">Bilans ekipy</h2>
         <div className="overflow-x-auto rounded-2xl border border-sand-dark bg-white/70 shadow-sm">
@@ -235,7 +231,6 @@ export default async function BudzetPage() {
         </p>
       </section>
 
-      {/* Do oddania */}
       {suggested.length > 0 && (
         <section className="mt-8">
           <h2 className="mb-3 font-display text-xl font-semibold text-ink">Do oddania</h2>
@@ -258,7 +253,6 @@ export default async function BudzetPage() {
         </section>
       )}
 
-      {/* Zwroty już zrobione */}
       {settlements.length > 0 && (
         <section className="mt-8">
           <h2 className="mb-3 font-display text-xl font-semibold text-ink">Zwroty już zrobione</h2>
@@ -287,7 +281,6 @@ export default async function BudzetPage() {
         </section>
       )}
 
-      {/* Lista wydatków */}
       <section className="mt-8">
         <h2 className="mb-3 font-display text-xl font-semibold text-ink">Wspólne wydatki</h2>
         {expenses.length === 0 ? (

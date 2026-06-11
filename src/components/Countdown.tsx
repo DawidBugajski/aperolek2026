@@ -15,7 +15,7 @@ function diff(target: number): Remaining | null {
 }
 
 export default function Countdown({ targetIso }: { targetIso: string }) {
-  // Cel: północ czasu włoskiego w dniu wylotu.
+  // Target: midnight Italian time on departure day.
   const target = new Date(`${targetIso}T00:00:00+02:00`).getTime();
   const [rem, setRem] = useState<Remaining | null>(null);
   const [mounted, setMounted] = useState(false);

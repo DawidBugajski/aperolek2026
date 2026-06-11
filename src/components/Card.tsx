@@ -1,5 +1,3 @@
-// Prosty, reużywalny kontener-„karta”. Server component.
-
 export default function Card({
   children,
   className = "",

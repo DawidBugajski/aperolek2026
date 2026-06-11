@@ -31,7 +31,7 @@ function iconFor(type: PlaceWithUrl["type"]) {
   });
 }
 
-// Dopasowuje widok do aktualnych pinezek po zmianie miasta.
+// Fits the map view to the current set of pins whenever they change.
 function FitBounds({ pins }: { pins: PlaceWithUrl[] }) {
   const map = useMap();
   useEffect(() => {

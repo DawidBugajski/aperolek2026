@@ -1,7 +1,6 @@
-// Budżet / rozliczenia grupowe.
-// 1) Dodawaj wspólne wydatki w `expenses` (kto zapłacił, ile, czego dotyczy).
-// 2) Gdy ktoś odda swoją część - dopisz to w `settlements`.
-// Strona policzy salda, podział na osobę i podpowie, kto komu jeszcze odda.
+// Group budget and settlements.
+// 1) Add shared expenses in `expenses` (who paid, how much, what for).
+// 2) When someone pays back their share, record it in `settlements`.
 
 import { travelers } from "./travelers";
 
@@ -11,16 +10,16 @@ export type Expense = {
   date: string; // ISO
   title: string;
   category: "nocleg" | "transport" | "atrakcje" | "jedzenie" | "inne";
-  amount: number; // w EUR
-  paidBy: string; // id z travelers.ts, np. "dawid"
-  // Kogo dotyczy wydatek. Pusta/brak = cała ekipa.
+  amount: number; // EUR
+  paidBy: string; // traveler id from travelers.ts, e.g. "dawid"
+  // Whose expense this is. Empty/absent = entire group.
   sharedBy?: string[];
 };
 
-// Zwrot: kto komu oddał gotówkę (rozliczenie poza wspólnymi wydatkami).
+// Settlement: cash repayment outside the shared expense pool.
 export type Settlement = {
-  from: string; // id - kto oddaje
-  to: string; // id - komu
+  from: string; // payer id
+  to: string; // recipient id
   amount: number; // EUR
   note?: string;
 };
@@ -32,7 +31,6 @@ export const expenses: Expense[] = [
     category: "atrakcje",
     amount: 75,
     paidBy: "dawid",
-    // brak sharedBy = dzielimy na całą ekipę (4 osoby -> 18,75 € / os.)
   },
 ];
 

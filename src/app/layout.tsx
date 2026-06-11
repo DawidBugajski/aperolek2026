@@ -23,7 +23,7 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: `${trip.title} - ${trip.subtitle}`,
   description: "Prywatne centrum dowodzenia wyjazdem do Rzymu, Pizy i Lukki.",
-  // Strona prywatna - nie chcemy jej w Google.
+  // Private site — keep out of search engines.
   robots: { index: false, follow: false },
 };
 

@@ -1,5 +1,3 @@
-// Kontakty awaryjne i ważne dane. Uzupełnij adresy noclegów i numery do siebie.
-
 export type EmergencyNumber = {
   label: string;
   number: string;

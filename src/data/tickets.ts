@@ -1,14 +1,13 @@
-// Bilety czasowe - wejścia na konkretną godzinę, kupowane z wyprzedzeniem.
-// status: "do-rezerwacji" | "zarezerwowane" | "nieaktualne"
+// Timed-entry tickets that must be booked in advance.
 
 export type Ticket = {
   name: string;
   city: string;
   why: string;
   officialUrl: string;
-  assignedTo: string | null; // kto rezerwuje
+  assignedTo: string | null; // who handles the booking
   status: "do-rezerwacji" | "zarezerwowane";
-  bookedFor?: string; // np. "28.07, 10:30"
+  bookedFor?: string; // e.g. "28.07, 10:30"
 };
 
 export const tickets: Ticket[] = [

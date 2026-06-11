@@ -1,5 +1,3 @@
-// Praktyczne info o Włoszech.
-
 export type InfoTip = {
   title: string;
   emoji: string;

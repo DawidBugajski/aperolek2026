@@ -1,5 +1,3 @@
-// Przydatne aplikacje we Włoszech.
-
 export type AppTip = {
   name: string;
   emoji: string;

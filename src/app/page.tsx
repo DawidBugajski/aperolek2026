@@ -10,7 +10,6 @@ const routeCities = ["Roma", "Pisa", "Lucca"];
 export default function Home() {
   return (
     <div className="space-y-14">
-      {/* HERO - plakat */}
       <section className="relative">
         <StampBadge
           top="Partenza"
@@ -26,7 +25,6 @@ export default function Home() {
             Aperolek <span className="text-terracotta">2026</span>
           </h1>
 
-          {/* Trasa */}
           <div className="mt-6 flex items-center justify-center gap-3 text-sm font-semibold uppercase tracking-[0.25em] text-ink-soft">
             {routeCities.map((c, i) => (
               <span key={c} className="flex items-center gap-3">
@@ -46,7 +44,6 @@ export default function Home() {
             <Countdown targetIso={trip.startDate} />
           </div>
 
-          {/* Ekipa */}
           <div className="mt-8 flex flex-wrap justify-center gap-2">
             {travelers.map((t) => (
               <span
@@ -62,7 +59,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SEKCJE - pocztówki */}
       <section>
         <div className="mb-5 flex items-center gap-4">
           <h2 className="font-display text-2xl font-bold text-ink">Itinerario</h2>

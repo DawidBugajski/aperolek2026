@@ -1,6 +1,3 @@
-// Co trzeba kupić/załatwić PRZED wyjazdem (poza biletami czasowymi - te są w osobnej sekcji).
-// done: false oznacza "jeszcze do zrobienia".
-
 export type ShoppingItem = {
   text: string;
   detail?: string;

@@ -1,5 +1,5 @@
-// Czyści tabele expenses + settlements i wstawia pierwszy realny wydatek (pociąg)
-// oraz zwrot Wiktorii. Uruchom:
+// Clears expenses + settlements tables and seeds the first real expense (train)
+// and Wiktoria's settlement. Run with:
 //   node --env-file=.env.local scripts/seed-budget.mjs
 import { createClient } from "@supabase/supabase-js";
 
@@ -11,11 +11,11 @@ const sb = createClient(
 
 const DUMMY = "00000000-0000-0000-0000-000000000000";
 
-// Czyszczenie
+// Clear existing data
 await sb.from("expenses").delete().neq("id", DUMMY);
 await sb.from("settlements").delete().neq("id", DUMMY);
 
-// Wydatek: bilety na pociąg Rzym -> Piza, 75 EUR, zapłacił Dawid, cała ekipa
+// Expense: train tickets Rome -> Pisa, 75 EUR, paid by Dawid, whole group
 const exp = await sb.from("expenses").insert({
   date: "2026-07-29",
   title: "Bilety na pociąg Rzym → Piza",
@@ -24,13 +24,13 @@ const exp = await sb.from("expenses").insert({
   paid_by: "dawid",
   shared_by: null,
 });
-console.log("wydatek (pociąg):", exp.error ? `BŁĄD -> ${exp.error.message}` : "OK");
+console.log("expense (train):", exp.error ? `ERROR -> ${exp.error.message}` : "OK");
 
-// Zwrot: Wiktoria oddała Dawidowi swoją część (75 / 4 = 18,75)
+// Settlement: Wiktoria paid her share back to Dawid (75 / 4 = 18.75)
 const set = await sb.from("settlements").insert({
   from_person: "wiktoria",
   to_person: "dawid",
   amount: 18.75,
   note: "oddała za bilety na pociąg",
 });
-console.log("zwrot (Wiktoria):", set.error ? `BŁĄD -> ${set.error.message}` : "OK");
+console.log("settlement (Wiktoria):", set.error ? `ERROR -> ${set.error.message}` : "OK");

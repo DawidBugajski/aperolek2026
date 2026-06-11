@@ -29,7 +29,7 @@ export async function addEntry(
 ): Promise<Entry> {
   await assertCanWrite();
   const sb = adminClient();
-  // _by / _at = kto i kiedy ostatnio dodał/zmienił (do podpisu w UI).
+  // _by / _at = who last modified this entry (displayed as a signature in the UI).
   const payload = { ...data, _by: by ?? null, _at: new Date().toISOString() };
   const { data: row, error } = await sb
     .from("entries")

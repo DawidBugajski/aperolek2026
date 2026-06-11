@@ -21,7 +21,6 @@ export default function TransportPage() {
         desc="Loty ekipy, transfery z lotnisk, pociągi między miastami i ważne ostrzeżenie o ZTL."
       />
 
-      {/* Loty */}
       <section className="mb-8">
         <h2 className="mb-3 font-display text-xl font-semibold text-ink">✈️ Loty ekipy</h2>
         <div className="overflow-x-auto rounded-2xl border border-sand-dark bg-white/70 shadow-sm">
@@ -69,7 +68,6 @@ export default function TransportPage() {
         </div>
       </section>
 
-      {/* Wskazówki - edytowalne */}
       <section>
         <h2 className="mb-3 font-display text-xl font-semibold text-ink">Wskazówki</h2>
         <EntryManager

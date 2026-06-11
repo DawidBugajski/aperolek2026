@@ -1,16 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { AUTH_COOKIE, authToken } from "@/lib/auth";
 
-// Bramka z hasłem (w Next 16 dawne "middleware" to teraz "proxy").
-// Zapisy i tak są chronione po stronie serwera (assertCanWrite) - to tylko
-// szybki redirect dla niezalogowanych.
+// Password gate (Next 16 uses "proxy" instead of "middleware").
+// Writes are also protected server-side via assertCanWrite — this just
+// redirects unauthenticated users before they see any page.
 export async function proxy(req: NextRequest) {
   const password = process.env.SITE_PASSWORD;
-  // Bramka wyłączona, gdy brak hasła w env.
   if (!password) return NextResponse.next();
 
   const { pathname } = req.nextUrl;
-  // Strona logowania zawsze dostępna.
   if (pathname.startsWith("/login")) return NextResponse.next();
 
   const cookie = req.cookies.get(AUTH_COOKIE)?.value;
@@ -27,6 +25,6 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  // Pomijamy zasoby statyczne; reszta (strony + Server Actions) przez bramkę.
+  // Skip static assets; everything else goes through the gate.
   matcher: ["/((?!_next/static|_next/image|favicon.ico|icon.svg).*)"],
 };

@@ -1,5 +1,3 @@
-// Plan dzień po dniu. Propozycja do swobodnej edycji - pozycje są tylko sugestiami.
-
 export type DayPlan = {
   date: string; // ISO
   weekday: string;

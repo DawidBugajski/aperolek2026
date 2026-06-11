@@ -1,7 +1,7 @@
-// Przenosi obecną treść (info, aplikacje, jedzenie, transport, sos, bilety, plan,
-// mapa, pakowanie, zakupy) do tabeli `entries`. Uruchom PO utworzeniu tabeli entries:
+// Seeds the `entries` table with all static content (info, apps, food, transport,
+// sos, tickets, plan, map, packing, shopping). Run after creating the entries table:
 //   node --env-file=.env.local scripts/seed-content.mjs
-// Idempotentny: dla każdego scope najpierw czyści, potem wstawia.
+// Idempotent: clears each scope before inserting.
 import { createClient } from "@supabase/supabase-js";
 
 const sb = createClient(
@@ -197,10 +197,10 @@ for (const [scope, items] of Object.entries(data)) {
   const rows = items.map((d, i) => ({ scope, sort: i, data: d }));
   const { error } = await sb.from("entries").insert(rows);
   if (error) {
-    console.log(`${scope}: BŁĄD -> ${error.message}`);
+    console.log(`${scope}: ERROR -> ${error.message}`);
   } else {
     total += rows.length;
     console.log(`${scope}: OK (${rows.length})`);
   }
 }
-console.log(`\nRazem wpisów: ${total}`);
+console.log(`\nTotal entries: ${total}`);

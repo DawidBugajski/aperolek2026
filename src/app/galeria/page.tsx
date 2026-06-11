@@ -2,8 +2,8 @@ import PageHeader from "@/components/PageHeader";
 
 export const metadata = { title: "Galeria" };
 
-// Placeholdery (zdjęcia z Wikimedia Commons, hostowane lokalnie - ładują się od razu).
-// Po wyjeździe podmieńcie pliki w /public/gallery na własne kadry.
+// Placeholder photos from Wikimedia Commons, hosted locally.
+// After the trip, replace files in /public/gallery with your own shots.
 const photos = [
   { src: "/gallery/koloseum.jpg", caption: "Koloseum", rotate: "-2deg" },
   { src: "/gallery/trevi.jpg", caption: "Fontanna di Trevi", rotate: "1.5deg" },

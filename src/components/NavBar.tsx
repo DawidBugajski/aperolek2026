@@ -10,7 +10,6 @@ export default function NavBar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // Bez nawigacji na ekranie logowania.
   if (pathname === "/login") return null;
 
   const isActive = (href: string) =>
@@ -35,7 +34,6 @@ export default function NavBar() {
           <span>{trip.title}</span>
         </Link>
 
-        {/* Desktop: jeden rząd, bez zawijania, w razie ciasnoty scroll poziomy */}
         <div className="no-scrollbar hidden flex-1 items-center justify-end gap-x-3 overflow-x-auto lg:flex">
           {sections.map((s) => (
             <Link key={s.slug} href={s.href} className={linkClass(s.href)}>
@@ -44,7 +42,6 @@ export default function NavBar() {
           ))}
         </div>
 
-        {/* Mobile toggle */}
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -55,7 +52,6 @@ export default function NavBar() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
       {open && (
         <div className="border-t-2 border-ink/30 bg-cream px-4 py-3 lg:hidden">
           <div className="grid grid-cols-2 gap-2">

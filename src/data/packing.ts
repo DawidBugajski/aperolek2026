@@ -1,5 +1,3 @@
-// Lista pakowania. Odhaczanie zapisuje się w przeglądarce (per urządzenie).
-
 export type PackingGroup = {
   title: string;
   emoji: string;

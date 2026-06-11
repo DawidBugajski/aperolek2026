@@ -1,6 +1,6 @@
-// Jedno źródło prawdy dla nawigacji i kafelków na stronie głównej.
-// title  -> pełna nazwa (nagłówki, kafelki)
-// short  -> krótka etykieta do paska nawigacji
+// Single source of truth for navigation and home page tiles.
+// title  -> full name (headings, tiles)
+// short  -> short label for the nav bar
 
 export type Section = {
   slug: string;

@@ -1,6 +1,3 @@
-// Piny na mapę: nocleg, atrakcje, knajpy - ze współrzędnymi.
-// Link prowadzi do wyszukiwania w Mapach Google.
-
 export type Place = {
   name: string;
   city: "Rzym" | "Piza" | "Lucca";
@@ -11,7 +8,7 @@ export type Place = {
 };
 
 export const places: Place[] = [
-  // Rzym
+  // Rome
   { name: "Nocleg w Rzymie", city: "Rzym", type: "nocleg", lat: 41.8967, lng: 12.4822, note: "do uzupełnienia po rezerwacji" },
   { name: "Koloseum", city: "Rzym", type: "atrakcja", lat: 41.8902, lng: 12.4922 },
   { name: "Forum Romanum", city: "Rzym", type: "atrakcja", lat: 41.8925, lng: 12.4853 },
@@ -21,7 +18,7 @@ export const places: Place[] = [
   { name: "Bazylika św. Piotra (Watykan)", city: "Rzym", type: "atrakcja", lat: 41.9022, lng: 12.4539 },
   { name: "Muzea Watykańskie", city: "Rzym", type: "atrakcja", lat: 41.9065, lng: 12.4534 },
   { name: "Trastevere", city: "Rzym", type: "jedzenie", lat: 41.889, lng: 12.469, note: "dzielnica pełna trattorii" },
-  // Piza
+  // Pisa
   { name: "Nocleg w Pizie", city: "Piza", type: "nocleg", lat: 43.716, lng: 10.396, note: "do uzupełnienia po rezerwacji" },
   { name: "Krzywa Wieża", city: "Piza", type: "atrakcja", lat: 43.723, lng: 10.3966 },
   { name: "Piazza dei Miracoli", city: "Piza", type: "atrakcja", lat: 43.7232, lng: 10.3936 },

@@ -1,5 +1,3 @@
-// Okrągła „pieczątka paszportowa” - dekoracyjny element w stylu plakatu.
-
 export default function StampBadge({
   top,
   big,

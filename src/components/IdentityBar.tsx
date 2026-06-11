@@ -12,10 +12,8 @@ export default function IdentityBar() {
   const pathname = usePathname();
   const readOnly = useReadOnly();
 
-  // Bez paska na ekranie logowania.
   if (pathname === "/login") return null;
 
-  // Gość: bez wyboru osoby, jasno oznaczony tryb podglądu.
   if (readOnly) {
     return (
       <div className="border-b border-sand-dark/60 bg-sand/40">
@@ -30,7 +28,7 @@ export default function IdentityBar() {
     );
   }
 
-  // Unikamy mignięcia przed odczytem z localStorage.
+  // Avoid flash before localStorage is read on client.
   if (!ready) return <div className="h-9" aria-hidden />;
 
   const choose = (id: string) => {

@@ -22,7 +22,6 @@ export default function BudgetForm() {
   const [tab, setTab] = useState<"wydatek" | "zwrot">("wydatek");
   const [error, setError] = useState<string | null>(null);
 
-  // Wydatek
   const [date, setDate] = useState<string>(trip.startDate);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<string>("jedzenie");
@@ -30,7 +29,6 @@ export default function BudgetForm() {
   const [paidBy, setPaidBy] = useState(identity?.id ?? travelers[0].id);
   const [sharedBy, setSharedBy] = useState<string[]>([]);
 
-  // Zwrot
   const [from, setFrom] = useState(identity?.id ?? travelers[0].id);
   const [to, setTo] = useState(travelers[1].id);
   const [sAmount, setSAmount] = useState("");

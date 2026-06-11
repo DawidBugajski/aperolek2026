@@ -1,5 +1,3 @@
-// Co koniecznie spróbować. Rzym (kuchnia rzymska) + Toskania (Piza/Lucca).
-
 export type FoodItem = {
   name: string;
   emoji: string;

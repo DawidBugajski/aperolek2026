@@ -1,5 +1,3 @@
-// Informacje transportowe: transfery z lotnisk, pociągi, ZTL.
-
 export type TransportTip = {
   title: string;
   emoji: string;

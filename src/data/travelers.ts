@@ -1,11 +1,11 @@
-// Ekipa + loty. Uzupełnij brakujące godziny/numery lotów (pola z "?" / null).
+// Travelers and flights. Fill in missing times/numbers (fields with null).
 
 export type Flight = {
   direction: "tam" | "powrót";
   date: string; // ISO YYYY-MM-DD
   from: string;
   to: string;
-  depart: string | null; // "HH:MM" lub null jeśli nieznane
+  depart: string | null; // "HH:MM" or null if unknown
   arrive: string | null;
   note?: string;
 };

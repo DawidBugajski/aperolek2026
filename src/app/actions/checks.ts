@@ -3,7 +3,6 @@
 import { adminClient } from "@/lib/supabaseAdmin";
 import { assertCanWrite } from "@/lib/session";
 
-// Odczyt stanu listy: { "treść pozycji": true/false }
 export async function getChecks(
   scope: string,
   person: string,
@@ -22,7 +21,6 @@ export async function getChecks(
   return map;
 }
 
-// Zapis pojedynczego odhaczenia
 export async function setCheck(
   scope: string,
   person: string,

@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from "react";
 
-// true = tryb gościa (podgląd, bez edycji)
+// true = guest mode (read-only)
 const Ctx = createContext(false);
 
 export function ReadOnlyProvider({

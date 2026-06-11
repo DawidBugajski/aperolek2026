@@ -10,8 +10,8 @@ import { getChecks, setCheck } from "@/app/actions/checks";
 const inputClass =
   "w-full border border-ink/25 bg-cream px-3 py-2 text-sm text-ink focus:border-terracotta focus:outline-none";
 
-// Lista z odhaczaniem ORAZ edycją pozycji.
-// Pozycje (entries, scope) są wspólne; odhaczenia (checks) per osoba (perPerson) lub wspólne.
+// Checklist with both check-off and item editing.
+// Entries (scope) are shared; checks are per-person (perPerson=true) or shared.
 export default function EditableChecklist({
   scope,
   perPerson,
@@ -62,7 +62,7 @@ export default function EditableChecklist({
     })();
   }, [loadItems, loadChecks]);
 
-  // realtime: pozycje
+  // realtime: entries
   useEffect(() => {
     if (!isSupabaseConfigured) return;
     const sb = browserClient();
@@ -79,7 +79,7 @@ export default function EditableChecklist({
     };
   }, [scope, loadItems]);
 
-  // realtime: odhaczenia
+  // realtime: check states
   useEffect(() => {
     if (!isSupabaseConfigured || !person) return;
     const sb = browserClient();
