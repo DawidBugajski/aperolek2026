@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+@theme {
+  /* Vintage travel poster: sprana ochra, terakota, morze, atrament */
+  --color-cream: #f4ead3;
+  --color-paper: #efe3c8;
+  --color-sand: #e7d6b3;
+  --color-sand-dark: #d6bf93;
+  --color-terracotta: #bf5a34;
+  --color-terracotta-dark: #9a4526;
+  --color-ochre: #c98a2b;
+  --color-olive: #6f7a3a;
+  --color-wine: #8a2f33;
+  --color-azzurro: #2f6f86;
+  --color-ink: #3a2c1d;
+  --color-ink-soft: #6a5944;
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-geist-sans);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, sans-serif, "Segoe UI Emoji",
+    "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Symbol";
+  /* Postarzony papier: bazowy parchment + winieta + delikatny szum */
+  background-color: #f4ead3;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255, 250, 235, 0.6), transparent 60%),
+    radial-gradient(circle at 12% 18%, rgba(191, 90, 52, 0.07), transparent 45%),
+    radial-gradient(circle at 88% 82%, rgba(47, 111, 134, 0.08), transparent 45%),
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(58, 44, 29, 0.10)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-attachment: fixed;
+}
+
+/* Nadruk: drobne kapitaliki z rozstrzeleniem - etykiety w stylu plakatu */
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-weight: 600;
+  color: var(--color-wine);
+}
+
+/* Podwójna ramka jak na starym plakacie/bilecie */
+.frame-double {
+  border: 2px solid rgba(58, 44, 29, 0.55);
+  box-shadow:
+    inset 0 0 0 1px var(--color-cream),
+    inset 0 0 0 5px rgba(58, 44, 29, 0.30);
+}
+
+/* Pocztówka/etykieta z lekkim „drukowanym” cieniem */
+.postcard {
+  background-color: var(--color-paper);
+  border: 1px solid rgba(58, 44, 29, 0.28);
+  box-shadow:
+    inset 0 0 0 3px var(--color-cream),
+    inset 0 0 0 4px rgba(58, 44, 29, 0.18),
+    3px 4px 0 rgba(58, 44, 29, 0.10);
+}
+
+/* Pieczątka paszportowa */
+.stamp {
+  color: var(--color-wine);
+  border: 2.5px dashed currentColor;
+  box-shadow: inset 0 0 0 4px var(--color-cream), inset 0 0 0 6px currentColor;
+}
+
+/* Pozioma linia ozdobna */
+.rule-fancy {
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(58, 44, 29, 0.45) 0 10px,
+    transparent 10px 16px
+  );
+}
+
+/* Pasek nawigacji bez widocznego scrollbara */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Płótno „starej mapy” dla symulowanej mapki z pinezkami */
+.map-canvas {
+  background-color: #e7d8b6;
+  background-image:
+    linear-gradient(rgba(58, 44, 29, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58, 44, 29, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 28% 72%, rgba(47, 111, 134, 0.16), transparent 36%),
+    radial-gradient(circle at 75% 30%, rgba(111, 122, 58, 0.12), transparent 40%);
+  background-size: 34px 34px, 34px 34px, 100% 100%, 100% 100%;
+}
+
+/* Leaflet: vintage sepia + tło dopasowane do parchmentu */
+.leaflet-container {
+  background: #e7d8b6;
+  font-family: inherit;
+}
+.map-vintage .leaflet-tile-pane {
+  filter: sepia(0.32) saturate(0.92) brightness(1.02) contrast(0.96);
+}
+
+/* Własne pinezki Leaflet (divIcon) */
+.leaflet-div-icon.trip-pin-wrap {
+  background: transparent;
+  border: none;
+}
+.trip-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.trip-pin-dot {
+  display: flex;
+  height: 30px;
+  width: 30px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+.trip-pin-tip {
+  height: 10px;
+  width: 10px;
+  transform: translateY(-5px) rotate(45deg);
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+}
