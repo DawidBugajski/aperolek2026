@@ -15,8 +15,7 @@ const eslintConfig = defineConfig([
   ]),
   {
     rules: {
-      // Świadomie używamy setState w efektach (mount, odczyt localStorage,
-      // pobieranie danych z Supabase). Zostawiamy jako podpowiedź, nie błąd.
+      // setState in effects is intentional here (mount, localStorage reads, Supabase fetches).
       "react-hooks/set-state-in-effect": "warn",
     },
   },
