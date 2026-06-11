@@ -10,6 +10,7 @@ import {
 import { travelers } from "@/data/travelers";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { getBudget } from "@/app/actions/budget";
+import { computeBalances, suggestTransfers } from "@/lib/settle";
 
 export const metadata = { title: "Budżet" };
 export const dynamic = "force-dynamic";
@@ -76,55 +77,12 @@ export default async function BudzetPage() {
   const { expenses, settlements, live } = await loadData();
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
 
-  const paid: Record<string, number> = {};
-  const owed: Record<string, number> = {};
-  const settledOut: Record<string, number> = {};
-  const settledIn: Record<string, number> = {};
-  travelers.forEach((t) => {
-    paid[t.id] = 0;
-    owed[t.id] = 0;
-    settledOut[t.id] = 0;
-    settledIn[t.id] = 0;
-  });
-
-  for (const e of expenses) {
-    paid[e.paidBy] += e.amount;
-    const sharers = e.sharedBy?.length ? e.sharedBy : travelers.map((t) => t.id);
-    const share = e.amount / sharers.length;
-    sharers.forEach((id) => {
-      owed[id] += share;
-    });
-  }
-  for (const s of settlements) {
-    settledOut[s.from] += s.amount;
-    settledIn[s.to] += s.amount;
-  }
-
-  const balance: Record<string, number> = {};
-  travelers.forEach((t) => {
-    balance[t.id] = paid[t.id] - owed[t.id] + settledOut[t.id] - settledIn[t.id];
-  });
-
-  const creditors = travelers
-    .map((t) => ({ id: t.id, amt: balance[t.id] }))
-    .filter((x) => x.amt > 0.01)
-    .sort((a, b) => b.amt - a.amt);
-  const debtors = travelers
-    .map((t) => ({ id: t.id, amt: -balance[t.id] }))
-    .filter((x) => x.amt > 0.01)
-    .sort((a, b) => b.amt - a.amt);
-
-  const suggested: { from: string; to: string; amount: number }[] = [];
-  let ci = 0;
-  let di = 0;
-  while (ci < creditors.length && di < debtors.length) {
-    const pay = Math.min(creditors[ci].amt, debtors[di].amt);
-    suggested.push({ from: debtors[di].id, to: creditors[ci].id, amount: pay });
-    creditors[ci].amt -= pay;
-    debtors[di].amt -= pay;
-    if (creditors[ci].amt <= 0.01) ci++;
-    if (debtors[di].amt <= 0.01) di++;
-  }
+  const personIds = travelers.map((t) => t.id);
+  const balances = computeBalances(personIds, expenses, settlements);
+  const byId = Object.fromEntries(balances.map((b) => [b.id, b]));
+  const suggested = suggestTransfers(balances);
+  // id -> balance, for the settlement form to show "ile zostało do oddania".
+  const balanceMap = Object.fromEntries(balances.map((b) => [b.id, b.balance]));
 
   return (
     <div>
@@ -137,7 +95,7 @@ export default async function BudzetPage() {
 
       {live ? (
         <div className="mb-8">
-          <BudgetForm />
+          <BudgetForm balances={balanceMap} />
         </div>
       ) : (
         <p className="mb-8 rounded-xl border border-dashed border-sand-dark bg-cream px-4 py-3 text-sm text-ink-soft">
@@ -202,17 +160,18 @@ export default async function BudzetPage() {
             </thead>
             <tbody>
               {travelers.map((t) => {
-                const b = balance[t.id];
+                const row = byId[t.id];
+                const b = row.balance;
                 return (
                   <tr key={t.id} className="border-b border-sand-dark/40 last:border-0">
                     <td className="px-4 py-3 font-medium text-ink">
                       <span className="mr-1" aria-hidden>{t.emoji}</span>
                       {t.name}
                     </td>
-                    <td className="px-4 py-3 tabular-nums text-ink">{eur(paid[t.id])}</td>
-                    <td className="px-4 py-3 tabular-nums text-ink-soft">{eur(owed[t.id])}</td>
+                    <td className="px-4 py-3 tabular-nums text-ink">{eur(row.paid)}</td>
+                    <td className="px-4 py-3 tabular-nums text-ink-soft">{eur(row.owed)}</td>
                     <td className="px-4 py-3 tabular-nums text-ink-soft">
-                      {settledOut[t.id] ? eur(settledOut[t.id]) : "-"}
+                      {row.settledOut ? eur(row.settledOut) : "-"}
                     </td>
                     <td
                       className={

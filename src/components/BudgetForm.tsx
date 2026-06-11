@@ -8,13 +8,27 @@ import { trip } from "@/data/trip";
 import { useIdentity } from "@/components/IdentityProvider";
 import { useReadOnly } from "@/components/ReadOnlyProvider";
 import { addExpense, addSettlement } from "@/app/actions/budget";
+import { remainingDebt } from "@/lib/settle";
 
 const categories = Object.keys(categoryLabels) as (keyof typeof categoryLabels)[];
+
+const nameById = Object.fromEntries(travelers.map((t) => [t.id, t.name]));
 
 const inputClass =
   "w-full border border-ink/25 bg-cream px-3 py-2 text-sm text-ink focus:border-terracotta focus:outline-none";
 
-export default function BudgetForm() {
+function eur(n: number) {
+  return n.toLocaleString("pl-PL", { style: "currency", currency: "EUR" });
+}
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+// balances: id -> current balance (>0 = group owes them, <0 = they still owe).
+export default function BudgetForm({
+  balances = {},
+}: {
+  balances?: Record<string, number>;
+}) {
   const { identity } = useIdentity();
   const readOnly = useReadOnly();
   const router = useRouter();
@@ -36,6 +50,15 @@ export default function BudgetForm() {
 
   const toggleShared = (id: string) =>
     setSharedBy((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+
+  // APR-006: help the user enter the right settlement amount.
+  const fromBalance = balances[from] ?? 0;
+  const fromDebt = remainingDebt(fromBalance); // how much `from` still owes (0 if settled/overpaid)
+  const enteredAmount = Number(sAmount.replace(",", "."));
+  const overpay =
+    fromDebt > 0.01 && Number.isFinite(enteredAmount)
+      ? Math.max(0, enteredAmount - fromDebt)
+      : 0;
 
   const submitExpense = () => {
     setError(null);
@@ -196,6 +219,36 @@ export default function BudgetForm() {
               ))}
             </select>
           </label>
+          <div className="rounded-lg border border-sand-dark bg-cream/60 px-3 py-2 text-sm sm:col-span-2">
+            {fromDebt > 0.01 ? (
+              <p className="text-ink-soft">
+                ⓘ <strong className="text-ink">{nameById[from]}</strong> ma jeszcze do oddania:{" "}
+                <strong className="text-ink">{eur(fromDebt)}</strong>{" "}
+                <button
+                  type="button"
+                  onClick={() => setSAmount(String(round2(fromDebt)))}
+                  className="underline hover:text-terracotta"
+                >
+                  wpisz dokładnie
+                </button>
+              </p>
+            ) : fromBalance > 0.01 ? (
+              <p className="text-ink-soft">
+                ⓘ <strong className="text-ink">{nameById[from]}</strong> nie ma długu — to ekipa jest
+                tej osobie winna <strong className="text-ink">{eur(fromBalance)}</strong>.
+              </p>
+            ) : (
+              <p className="text-ink-soft">
+                ✓ <strong className="text-ink">{nameById[from]}</strong> jest już rozliczona/y.
+              </p>
+            )}
+            {overpay > 0.01 && (
+              <p className="mt-1 text-wine">
+                ⚠ To o <strong>{eur(overpay)}</strong> więcej niż dług {nameById[from]} — nadpłaci,
+                a ekipa będzie jej/jemu winna tę różnicę.
+              </p>
+            )}
+          </div>
           <label className="text-sm">
             <span className="mb-1 block text-ink-soft">Kwota (EUR)</span>
             <input
