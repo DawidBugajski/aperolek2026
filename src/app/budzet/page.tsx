@@ -1,6 +1,7 @@
 import PageHeader from "@/components/PageHeader";
 import BudgetForm from "@/components/BudgetForm";
 import BudgetRealtime from "@/components/BudgetRealtime";
+import SuggestedTransfer from "@/components/SuggestedTransfer";
 import { ExpenseRow, SettlementRow } from "@/components/BudgetRows";
 import {
   expenses as staticExpenses,
@@ -28,7 +29,6 @@ type Exp = {
 type Sett = { id?: string; from: string; to: string; amount: number; note?: string };
 
 const nameById = Object.fromEntries(travelers.map((t) => [t.id, t.name]));
-const emojiById = Object.fromEntries(travelers.map((t) => [t.id, t.emoji]));
 
 function eur(n: number) {
   return n.toLocaleString("pl-PL", { style: "currency", currency: "EUR" });
@@ -197,18 +197,13 @@ export default async function BudzetPage() {
           <h2 className="mb-3 font-display text-xl font-semibold text-ink">Do oddania</h2>
           <div className="space-y-2">
             {suggested.map((s, i) => (
-              <div
+              <SuggestedTransfer
                 key={i}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-sand-dark bg-white/70 px-4 py-3 text-sm"
-              >
-                <span className="text-ink">
-                  <span aria-hidden>{emojiById[s.from]}</span>{" "}
-                  <strong>{nameById[s.from]}</strong> → oddaje →{" "}
-                  <span aria-hidden>{emojiById[s.to]}</span>{" "}
-                  <strong>{nameById[s.to]}</strong>
-                </span>
-                <span className="font-semibold tabular-nums text-terracotta">{eur(s.amount)}</span>
-              </div>
+                from={s.from}
+                to={s.to}
+                amount={s.amount}
+                live={live}
+              />
             ))}
           </div>
         </section>
