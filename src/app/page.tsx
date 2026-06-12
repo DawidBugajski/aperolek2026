@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Countdown from "@/components/Countdown";
 import StampBadge from "@/components/StampBadge";
+import WeatherStrip from "@/components/WeatherStrip";
 import { trip } from "@/data/trip";
 import { sections } from "@/data/sections";
 import { travelers } from "@/data/travelers";
@@ -58,6 +59,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <WeatherStrip />
 
       <section>
         <div className="mb-5 flex items-center gap-4">
