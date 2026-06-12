@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { travelers } from "@/data/travelers";
 import { categoryLabels } from "@/data/budget";
 import { useReadOnly } from "@/components/ReadOnlyProvider";
+import { useToast } from "@/components/ToastProvider";
 import {
   updateExpense,
   deleteExpense,
@@ -35,6 +36,7 @@ export type ExpenseData = {
 export function ExpenseRow({ expense }: { expense: ExpenseData }) {
   const router = useRouter();
   const readOnly = useReadOnly();
+  const toast = useToast();
   const [editing, setEditing] = useState(false);
   const [pending, startTransition] = useTransition();
   const [date, setDate] = useState(expense.date);
@@ -49,23 +51,33 @@ export function ExpenseRow({ expense }: { expense: ExpenseData }) {
 
   const save = () =>
     startTransition(async () => {
-      await updateExpense(expense.id, {
-        date,
-        title: title.trim(),
-        category,
-        amount: Number(amount.replace(",", ".")),
-        paidBy,
-        sharedBy,
-      });
-      setEditing(false);
-      router.refresh();
+      try {
+        await updateExpense(expense.id, {
+          date,
+          title: title.trim(),
+          category,
+          amount: Number(amount.replace(",", ".")),
+          paidBy,
+          sharedBy,
+        });
+        setEditing(false);
+        router.refresh();
+        toast("Zapisano wydatek.", "success");
+      } catch (e) {
+        toast(e instanceof Error ? e.message : "Błąd zapisu.", "error");
+      }
     });
 
   const remove = () => {
     if (!confirm("Usunąć wydatek?")) return;
     startTransition(async () => {
-      await deleteExpense(expense.id);
-      router.refresh();
+      try {
+        await deleteExpense(expense.id);
+        router.refresh();
+        toast("Usunięto wydatek.", "success");
+      } catch (e) {
+        toast(e instanceof Error ? e.message : "Błąd usuwania.", "error");
+      }
     });
   };
 
@@ -161,6 +173,7 @@ export type SettlementData = {
 export function SettlementRow({ settlement }: { settlement: SettlementData }) {
   const router = useRouter();
   const readOnly = useReadOnly();
+  const toast = useToast();
   const [editing, setEditing] = useState(false);
   const [pending, startTransition] = useTransition();
   const [from, setFrom] = useState(settlement.from);
@@ -170,21 +183,31 @@ export function SettlementRow({ settlement }: { settlement: SettlementData }) {
 
   const save = () =>
     startTransition(async () => {
-      await updateSettlement(settlement.id, {
-        from,
-        to,
-        amount: Number(amount.replace(",", ".")),
-        note: note.trim(),
-      });
-      setEditing(false);
-      router.refresh();
+      try {
+        await updateSettlement(settlement.id, {
+          from,
+          to,
+          amount: Number(amount.replace(",", ".")),
+          note: note.trim(),
+        });
+        setEditing(false);
+        router.refresh();
+        toast("Zapisano zwrot.", "success");
+      } catch (e) {
+        toast(e instanceof Error ? e.message : "Błąd zapisu.", "error");
+      }
     });
 
   const remove = () => {
     if (!confirm("Usunąć zwrot?")) return;
     startTransition(async () => {
-      await deleteSettlement(settlement.id);
-      router.refresh();
+      try {
+        await deleteSettlement(settlement.id);
+        router.refresh();
+        toast("Usunięto zwrot.", "success");
+      } catch (e) {
+        toast(e instanceof Error ? e.message : "Błąd usuwania.", "error");
+      }
     });
   };
 

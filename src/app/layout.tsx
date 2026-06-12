@@ -7,6 +7,7 @@ import IdentityBar from "@/components/IdentityBar";
 import IdentityGate from "@/components/IdentityGate";
 import { IdentityProvider } from "@/components/IdentityProvider";
 import { ReadOnlyProvider } from "@/components/ReadOnlyProvider";
+import { ToastProvider } from "@/components/ToastProvider";
 import { getRole } from "@/lib/session";
 import { trip } from "@/data/trip";
 
@@ -40,6 +41,7 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        <ToastProvider>
         <ReadOnlyProvider isGuest={isGuest}>
         <IdentityProvider>
           <NavBar />
@@ -55,6 +57,7 @@ export default async function RootLayout({
           </footer>
         </IdentityProvider>
         </ReadOnlyProvider>
+        </ToastProvider>
       </body>
     </html>
   );

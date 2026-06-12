@@ -5,6 +5,7 @@ import { isSupabaseConfigured, browserClient } from "@/lib/supabase";
 import { useReadOnly } from "@/components/ReadOnlyProvider";
 import { useIdentity } from "@/components/IdentityProvider";
 import { SkeletonList } from "@/components/Skeleton";
+import { useToast } from "@/components/ToastProvider";
 import {
   getEntries,
   addEntry,
@@ -48,9 +49,9 @@ export default function EntryManager({
 }) {
   const readOnly = useReadOnly();
   const { identity } = useIdentity();
+  const toast = useToast();
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [form, setForm] = useState<Record<string, string>>({});
@@ -61,22 +62,21 @@ export default function EntryManager({
     try {
       const rows = await getEntries(scope);
       setEntries(rows);
-      setError(null);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Błąd wczytywania.");
+      toast(e instanceof Error ? e.message : "Błąd wczytywania.", "error");
     } finally {
       setLoading(false);
     }
-  }, [scope]);
+  }, [scope, toast]);
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
       setLoading(false);
-      setError("Baza nie jest skonfigurowana.");
+      toast("Baza nie jest skonfigurowana.", "error");
       return;
     }
     refetch();
-  }, [refetch]);
+  }, [refetch, toast]);
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
@@ -117,7 +117,6 @@ export default function EntryManager({
   const cancel = () => {
     setAdding(false);
     setEditingId(null);
-    setError(null);
   };
 
   const buildData = (): Data => {
@@ -132,20 +131,20 @@ export default function EntryManager({
   const save = async () => {
     for (const f of fields) {
       if (f.required && !String(form[f.key] ?? "").trim()) {
-        setError(`Uzupełnij: ${f.label}`);
+        toast(`Uzupełnij: ${f.label}`, "error");
         return;
       }
     }
     setSaving(true);
-    setError(null);
     try {
       const by = identity?.name ?? null;
       if (editingId) await updateEntry(editingId, buildData(), by);
       else await addEntry(scope, buildData(), by);
       cancel();
       await refetch();
+      toast("Zapisano.", "success");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Błąd zapisu.");
+      toast(e instanceof Error ? e.message : "Błąd zapisu.", "error");
     } finally {
       setSaving(false);
     }
@@ -154,12 +153,12 @@ export default function EntryManager({
   const remove = async (id: string) => {
     if (!confirm("Usunąć tę pozycję?")) return;
     setDeletingId(id);
-    setError(null);
     try {
       await deleteEntry(id);
       await refetch();
+      toast("Usunięto.", "success");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Błąd usuwania.");
+      toast(e instanceof Error ? e.message : "Błąd usuwania.", "error");
     } finally {
       setDeletingId(null);
     }
@@ -226,8 +225,6 @@ export default function EntryManager({
 
   return (
     <div className="space-y-3">
-      {error && <p className="text-sm text-wine">{error}</p>}
-
       {entries.length === 0 && !adding && (
         <p className="rounded-xl border border-dashed border-sand-dark bg-cream px-4 py-3 text-sm text-ink-soft">
           {emptyText}
