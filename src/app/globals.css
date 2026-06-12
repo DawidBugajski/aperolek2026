@@ -89,6 +89,18 @@ body {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* Druk / zapis do PDF: chowamy nawigację, stopkę i przyciski; czyste tło */
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+  }
+}
+
 /* Płótno „starej mapy” dla symulowanej mapki z pinezkami */
 .map-canvas {
   background-color: #e7d8b6;

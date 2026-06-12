@@ -17,6 +17,7 @@ export const sections: Section[] = [
   { slug: "do-kupienia", href: "/do-kupienia", title: "Do kupienia", short: "Zakupy", emoji: "🛒", desc: "Nocleg, wejściówki, rzeczy przed wyjazdem" },
   { slug: "transport", href: "/transport", title: "Transport", short: "Transport", emoji: "🚆", desc: "Loty, transfery, pociągi, ZTL" },
   { slug: "budzet", href: "/budzet", title: "Budżet", short: "Budżet", emoji: "💸", desc: "Kto za co zapłacił i podział kosztów" },
+  { slug: "podsumowanie", href: "/podsumowanie", title: "Podsumowanie", short: "Podsumowanie", emoji: "📊", desc: "Koszty wg kategorii i finalne rozliczenie" },
   { slug: "pakowanie", href: "/pakowanie", title: "Pakowanie", short: "Pakowanie", emoji: "🧳", desc: "Lista wspólna i indywidualna" },
   { slug: "aplikacje", href: "/aplikacje", title: "Aplikacje", short: "Aplikacje", emoji: "📱", desc: "Co zainstalować przed wyjazdem" },
   { slug: "mapa", href: "/mapa", title: "Mapa", short: "Mapa", emoji: "📍", desc: "Nocleg, atrakcje, knajpy" },
