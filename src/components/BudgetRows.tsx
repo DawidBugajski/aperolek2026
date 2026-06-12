@@ -121,8 +121,16 @@ export function ExpenseRow({ expense }: { expense: ExpenseData }) {
   const cat = categoryLabels[expense.category as keyof typeof categoryLabels];
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-sand-dark bg-white/70 px-4 py-3 text-sm">
-      <span className="font-medium text-ink">
+      <span className="min-w-0 font-medium text-ink">
         {cat?.emoji} {expense.title}
+        <span className="mt-0.5 block text-xs font-normal text-ink-soft">
+          dla:{" "}
+          {expense.sharedBy && expense.sharedBy.length
+            ? expense.sharedBy
+                .map((id) => `${emojiById[id] ?? ""} ${nameById[id] ?? id}`.trim())
+                .join(", ")
+            : "cała ekipa"}
+        </span>
       </span>
       <span className="flex items-center gap-3 text-ink-soft">
         <span>
