@@ -9,6 +9,7 @@ import { useIdentity } from "@/components/IdentityProvider";
 import { useReadOnly } from "@/components/ReadOnlyProvider";
 import { addExpense, addSettlement } from "@/app/actions/budget";
 import { remainingDebt } from "@/lib/settle";
+import { useToast } from "@/components/ToastProvider";
 
 const categories = Object.keys(categoryLabels) as (keyof typeof categoryLabels)[];
 
@@ -34,7 +35,7 @@ export default function BudgetForm({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [tab, setTab] = useState<"wydatek" | "zwrot">("wydatek");
-  const [error, setError] = useState<string | null>(null);
+  const toast = useToast();
 
   const [date, setDate] = useState<string>(trip.startDate);
   const [title, setTitle] = useState("");
@@ -61,10 +62,9 @@ export default function BudgetForm({
       : 0;
 
   const submitExpense = () => {
-    setError(null);
     const value = Number(amount.replace(",", "."));
     if (!title.trim() || !Number.isFinite(value) || value <= 0) {
-      setError("Podaj tytuł i poprawną kwotę.");
+      toast("Podaj tytuł i poprawną kwotę.", "error");
       return;
     }
     startTransition(async () => {
@@ -74,17 +74,17 @@ export default function BudgetForm({
         setAmount("");
         setSharedBy([]);
         router.refresh();
+        toast("Dodano wydatek.", "success");
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Błąd zapisu.");
+        toast(e instanceof Error ? e.message : "Błąd zapisu.", "error");
       }
     });
   };
 
   const submitSettlement = () => {
-    setError(null);
     const value = Number(sAmount.replace(",", "."));
     if (from === to || !Number.isFinite(value) || value <= 0) {
-      setError("Wybierz dwie różne osoby i poprawną kwotę.");
+      toast("Wybierz dwie różne osoby i poprawną kwotę.", "error");
       return;
     }
     startTransition(async () => {
@@ -93,8 +93,9 @@ export default function BudgetForm({
         setSAmount("");
         setNote("");
         router.refresh();
+        toast("Dodano zwrot.", "success");
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Błąd zapisu.");
+        toast(e instanceof Error ? e.message : "Błąd zapisu.", "error");
       }
     });
   };
@@ -280,8 +281,6 @@ export default function BudgetForm({
           </div>
         </div>
       )}
-
-      {error && <p className="mt-3 text-sm text-wine">{error}</p>}
     </div>
   );
 }

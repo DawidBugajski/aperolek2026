@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { travelers } from "@/data/travelers";
 import { useReadOnly } from "@/components/ReadOnlyProvider";
+import { useToast } from "@/components/ToastProvider";
 import { addSettlement } from "@/app/actions/budget";
 
 const nameById = Object.fromEntries(travelers.map((t) => [t.id, t.name]));
@@ -30,14 +31,20 @@ export default function SuggestedTransfer({
 }) {
   const router = useRouter();
   const readOnly = useReadOnly();
+  const toast = useToast();
   const [pending, startTransition] = useTransition();
 
   const settle = () => {
     const value = round2(amount);
     if (!confirm(`Zapisać zwrot: ${nameById[from]} → ${nameById[to]} (${eur(value)})?`)) return;
     startTransition(async () => {
-      await addSettlement({ from, to, amount: value, note: "" });
-      router.refresh();
+      try {
+        await addSettlement({ from, to, amount: value, note: "" });
+        router.refresh();
+        toast("Zapisano zwrot.", "success");
+      } catch (e) {
+        toast(e instanceof Error ? e.message : "Błąd zapisu.", "error");
+      }
     });
   };
 

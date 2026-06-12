@@ -7,6 +7,7 @@ import { isSupabaseConfigured, browserClient } from "@/lib/supabase";
 import { getEntries, addEntry, updateEntry, deleteEntry, type Entry } from "@/app/actions/entries";
 import { getChecks, setCheck } from "@/app/actions/checks";
 import { SkeletonList } from "@/components/Skeleton";
+import { useToast } from "@/components/ToastProvider";
 
 const inputClass =
   "w-full border border-ink/25 bg-cream px-3 py-2 text-sm text-ink focus:border-terracotta focus:outline-none";
@@ -24,10 +25,10 @@ export default function EditableChecklist({
   const readOnly = useReadOnly();
   const person = perPerson ? identity?.id ?? null : "shared";
 
+  const toast = useToast();
   const [items, setItems] = useState<Entry[]>([]);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [text, setText] = useState("");
@@ -39,9 +40,9 @@ export default function EditableChecklist({
     try {
       setItems(await getEntries(scope));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Błąd wczytywania.");
+      toast(e instanceof Error ? e.message : "Błąd wczytywania.", "error");
     }
-  }, [scope]);
+  }, [scope, toast]);
 
   const loadChecks = useCallback(async () => {
     if (!person) return;
@@ -55,7 +56,7 @@ export default function EditableChecklist({
   useEffect(() => {
     if (!isSupabaseConfigured) {
       setLoading(false);
-      setError("Baza nie jest skonfigurowana.");
+      toast("Baza nie jest skonfigurowana.", "error");
       return;
     }
     (async () => {
@@ -63,7 +64,7 @@ export default function EditableChecklist({
       await loadChecks();
       setLoading(false);
     })();
-  }, [loadItems, loadChecks]);
+  }, [loadItems, loadChecks, toast]);
 
   // realtime: entries
   useEffect(() => {
@@ -118,7 +119,6 @@ export default function EditableChecklist({
     setDetail("");
     setAdding(false);
     setEditingId(null);
-    setError(null);
   };
   const startEdit = (it: Entry) => {
     setText(String(it.data.text ?? ""));
@@ -129,7 +129,7 @@ export default function EditableChecklist({
   const save = async () => {
     if (saving) return;
     if (!text.trim()) {
-      setError("Podaj treść pozycji.");
+      toast("Podaj treść pozycji.", "error");
       return;
     }
     setSaving(true);
@@ -140,8 +140,9 @@ export default function EditableChecklist({
       else await addEntry(scope, data, by);
       resetForm();
       await loadItems();
+      toast("Zapisano.", "success");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Błąd zapisu.");
+      toast(e instanceof Error ? e.message : "Błąd zapisu.", "error");
     } finally {
       setSaving(false);
     }
@@ -149,12 +150,12 @@ export default function EditableChecklist({
   const remove = async (id: string) => {
     if (!confirm("Usunąć pozycję?")) return;
     setDeletingId(id);
-    setError(null);
     try {
       await deleteEntry(id);
       await loadItems();
+      toast("Usunięto.", "success");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Błąd usuwania.");
+      toast(e instanceof Error ? e.message : "Błąd usuwania.", "error");
     } finally {
       setDeletingId(null);
     }
@@ -212,8 +213,6 @@ export default function EditableChecklist({
 
   return (
     <div className="space-y-2">
-      {error && <p className="text-sm text-wine">{error}</p>}
-
       {items.map((it) =>
         editingId === it.id ? (
           <div key={it.id}>{form}</div>
