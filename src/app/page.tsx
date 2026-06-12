@@ -15,7 +15,7 @@ export default function Home() {
           top="Partenza"
           big="25.07"
           bottom="Luglio '26"
-          className="absolute -right-1 -top-6 z-10 hidden rotate-12 bg-cream/60 sm:flex"
+          className="absolute -right-1 -top-5 z-10 flex rotate-12 bg-cream/60 sm:-top-6"
         />
 
         <div className="frame-double bg-paper px-6 py-10 text-center sm:px-12 sm:py-14">

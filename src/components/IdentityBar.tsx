@@ -16,7 +16,7 @@ export default function IdentityBar() {
 
   if (readOnly) {
     return (
-      <div className="border-b border-sand-dark/60 bg-sand/40">
+      <div className="no-print border-b border-sand-dark/60 bg-sand/40">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-2 px-4 py-2 text-sm">
           <span className="text-ink-soft">Jesteś:</span>
           <span className="font-semibold text-ink">👤 Gość</span>
