@@ -34,6 +34,23 @@ function eur(n: number) {
   return n.toLocaleString("pl-PL", { style: "currency", currency: "EUR" });
 }
 
+function pln(n: number, r: number) {
+  return `(${Math.round(n * r).toLocaleString("pl-PL")} zł)`;
+}
+
+async function fetchEurPlnRate(): Promise<number> {
+  try {
+    const res = await fetch("https://api.frankfurter.app/latest?from=EUR&to=PLN", {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return 4.25;
+    const json = await res.json();
+    return typeof json?.rates?.PLN === "number" ? json.rates.PLN : 4.25;
+  } catch {
+    return 4.25;
+  }
+}
+
 async function loadData(): Promise<{ expenses: Exp[]; settlements: Sett[]; live: boolean }> {
   if (isSupabaseConfigured) {
     try {
@@ -75,6 +92,7 @@ async function loadData(): Promise<{ expenses: Exp[]; settlements: Sett[]; live:
 
 export default async function BudzetPage() {
   const { expenses, settlements, live } = await loadData();
+  const rate = await fetchEurPlnRate();
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
 
   const personIds = travelers.map((t) => t.id);
@@ -135,15 +153,18 @@ export default async function BudzetPage() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-2xl border border-sand-dark bg-white/70 p-5 shadow-sm">
           <p className="text-sm text-ink-soft">Suma wspólnych wydatków</p>
-          <p className="font-display text-3xl font-bold text-terracotta">{eur(total)}</p>
+          <p className="font-display text-3xl font-bold text-terracotta">{eur(total)} <span className="text-xl text-ink-soft">{pln(total, rate)}</span></p>
         </div>
         <div className="rounded-2xl border border-sand-dark bg-white/70 p-5 shadow-sm">
           <p className="text-sm text-ink-soft">Średnio na osobę ({travelers.length})</p>
           <p className="font-display text-3xl font-bold text-ink">
-            {eur(total / travelers.length)}
+            {eur(total / travelers.length)} <span className="text-xl text-ink-soft">{pln(total / travelers.length, rate)}</span>
           </p>
         </div>
       </div>
+      <p className="mt-1 text-right text-xs text-ink-soft/60">
+        kurs EUR/PLN: {rate.toFixed(4)} (ECB, {new Date().toLocaleDateString("pl-PL")})
+      </p>
 
       <section className="mt-8">
         <h2 className="mb-3 font-display text-xl font-semibold text-ink">Bilans ekipy</h2>
@@ -168,10 +189,10 @@ export default async function BudzetPage() {
                       <span className="mr-1" aria-hidden>{t.emoji}</span>
                       {t.name}
                     </td>
-                    <td className="px-4 py-3 tabular-nums text-ink">{eur(row.paid)}</td>
-                    <td className="px-4 py-3 tabular-nums text-ink-soft">{eur(row.owed)}</td>
+                    <td className="px-4 py-3 tabular-nums text-ink">{eur(row.paid)} <span className="block text-xs font-normal text-ink-soft/70">{pln(row.paid, rate)}</span></td>
+                    <td className="px-4 py-3 tabular-nums text-ink-soft">{eur(row.owed)} <span className="block text-xs font-normal text-ink-soft/70">{pln(row.owed, rate)}</span></td>
                     <td className="px-4 py-3 tabular-nums text-ink-soft">
-                      {row.settledOut ? eur(row.settledOut) : "-"}
+                      {row.settledOut ? <>{eur(row.settledOut)} <span className="block text-xs font-normal text-ink-soft/70">{pln(row.settledOut, rate)}</span></> : "-"}
                     </td>
                     <td
                       className={
@@ -179,7 +200,7 @@ export default async function BudzetPage() {
                         (Math.abs(b) < 0.01 ? "text-ink-soft" : b > 0 ? "text-olive" : "text-wine")
                       }
                     >
-                      {Math.abs(b) < 0.01 ? "rozliczony ✓" : (b > 0 ? "+" : "") + eur(b)}
+                      {Math.abs(b) < 0.01 ? "rozliczony ✓" : <>{(b > 0 ? "+" : "") + eur(b)} <span className="block text-xs font-normal text-ink-soft/70">{pln(Math.abs(b), rate)}</span></>}
                     </td>
                   </tr>
                 );
@@ -203,6 +224,7 @@ export default async function BudzetPage() {
                 to={s.to}
                 amount={s.amount}
                 live={live}
+                rate={rate}
               />
             ))}
           </div>
@@ -218,6 +240,7 @@ export default async function BudzetPage() {
                 <SettlementRow
                   key={s.id}
                   settlement={{ id: s.id, from: s.from, to: s.to, amount: s.amount, note: s.note }}
+                  rate={rate}
                 />
               ) : (
                 <div
@@ -229,7 +252,7 @@ export default async function BudzetPage() {
                     <strong>{nameById[s.to]}</strong>
                     {s.note && <span className="text-ink-soft"> - {s.note}</span>}
                   </span>
-                  <span className="font-semibold tabular-nums text-olive">{eur(s.amount)}</span>
+                  <span className="font-semibold tabular-nums text-olive">{eur(s.amount)} <span className="ml-1 text-xs text-ink-soft/70">{pln(s.amount, rate)}</span></span>
                 </div>
               ),
             )}
@@ -258,6 +281,7 @@ export default async function BudzetPage() {
                     paidBy: e.paidBy,
                     sharedBy: e.sharedBy,
                   }}
+                  rate={rate}
                 />
               ) : (
                 <div
@@ -268,7 +292,7 @@ export default async function BudzetPage() {
                     {categoryLabels[e.category]?.emoji} {e.title}
                   </span>
                   <span className="text-ink-soft">
-                    {eur(e.amount)} · zapłacił(a){" "}
+                    {eur(e.amount)} <span className="ml-1 text-xs text-ink-soft/70">{pln(e.amount, rate)}</span> · zapłacił(a){" "}
                     <strong className="text-ink">{nameById[e.paidBy] ?? e.paidBy}</strong>
                   </span>
                 </div>

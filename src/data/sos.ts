@@ -12,7 +12,7 @@ export const emergencyNumbers: EmergencyNumber[] = [
 ];
 
 export const importantContacts: { label: string; value: string }[] = [
-  { label: "Adres noclegu w Rzymie", value: "do uzupełnienia" },
+  { label: "Adres noclegu w Rzymie", value: "Silvano's Home In Rome — Via Costantino Morin 12, Vaticano Prati, 00195 Rzym" },
   { label: "Adres noclegu w Pizie", value: "do uzupełnienia" },
   { label: "Ambasada RP w Rzymie", value: "Via Pietro Paolo Rubens 20, Rzym - tel. +39 06 36 204 200" },
   { label: "Numer do ekipy (kontakt awaryjny)", value: "do uzupełnienia" },

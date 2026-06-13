@@ -162,7 +162,7 @@ function PlanPageInner() {
     for (const day of activeGroup.days) {
       const entries = dayEntries.get(day.date) ?? [];
       for (const entry of entries) {
-        if (hasCoords(entry)) {
+        if (hasCoords(entry) && entry.place_type !== "nocleg") {
           const key = String(entry.text ?? "").toLowerCase();
           if (!result.has(key)) result.set(key, num++);
         }

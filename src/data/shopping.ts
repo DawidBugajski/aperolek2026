@@ -15,7 +15,7 @@ export const shopping: ShoppingGroup[] = [
     title: "Nocleg",
     emoji: "🏨",
     items: [
-      { text: "Nocleg w Rzymie (25-29.07, 4 noce)", detail: "do uzupełnienia: nazwa, adres, kto rezerwuje", done: false },
+      { text: "Nocleg w Rzymie (25-29.07, 4 noce)", detail: "Silvano's Home In Rome — Via Costantino Morin 12, Vaticano Prati, 00195 Rzym", done: true },
       { text: "Nocleg w Pizie (29-31.07, 2 noce)", detail: "do uzupełnienia: nazwa, adres", done: false },
     ],
   },

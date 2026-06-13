@@ -9,7 +9,6 @@ export type Place = {
 
 export const places: Place[] = [
   // Rome
-  { name: "Nocleg w Rzymie", city: "Rzym", type: "nocleg", lat: 41.8967, lng: 12.4822, note: "do uzupełnienia po rezerwacji" },
   { name: "Koloseum", city: "Rzym", type: "atrakcja", lat: 41.8902, lng: 12.4922 },
   { name: "Forum Romanum", city: "Rzym", type: "atrakcja", lat: 41.8925, lng: 12.4853 },
   { name: "Panteon", city: "Rzym", type: "atrakcja", lat: 41.8986, lng: 12.4769 },

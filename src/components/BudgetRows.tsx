@@ -33,7 +33,7 @@ export type ExpenseData = {
   sharedBy?: string[];
 };
 
-export function ExpenseRow({ expense }: { expense: ExpenseData }) {
+export function ExpenseRow({ expense, rate = 4.25 }: { expense: ExpenseData; rate?: number }) {
   const router = useRouter();
   const readOnly = useReadOnly();
   const toast = useToast();
@@ -146,7 +146,7 @@ export function ExpenseRow({ expense }: { expense: ExpenseData }) {
       </span>
       <span className="flex items-center gap-3 text-ink-soft">
         <span>
-          {eur(expense.amount)} · zapłacił(a){" "}
+          {eur(expense.amount)} <span className="text-xs text-ink-soft/70">({Math.round(expense.amount * rate).toLocaleString("pl-PL")} zł)</span> · zapłacił(a){" "}
           <strong className="text-ink">{nameById[expense.paidBy] ?? expense.paidBy}</strong>
         </span>
         <button
@@ -178,7 +178,7 @@ export type SettlementData = {
   note?: string;
 };
 
-export function SettlementRow({ settlement }: { settlement: SettlementData }) {
+export function SettlementRow({ settlement, rate = 4.25 }: { settlement: SettlementData; rate?: number }) {
   const router = useRouter();
   const readOnly = useReadOnly();
   const toast = useToast();
@@ -258,7 +258,7 @@ export function SettlementRow({ settlement }: { settlement: SettlementData }) {
         {settlement.note && <span className="text-ink-soft"> - {settlement.note}</span>}
       </span>
       <span className="flex items-center gap-3">
-        <span className="font-semibold tabular-nums text-olive">{eur(settlement.amount)}</span>
+        <span className="font-semibold tabular-nums text-olive">{eur(settlement.amount)} <span className="text-xs text-olive/70">({Math.round(settlement.amount * rate).toLocaleString("pl-PL")} zł)</span></span>
         <button
           type="button"
           onClick={() => setEditing(true)}

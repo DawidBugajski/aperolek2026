@@ -23,11 +23,13 @@ export default function SuggestedTransfer({
   to,
   amount,
   live,
+  rate = 4.25,
 }: {
   from: string;
   to: string;
   amount: number;
   live: boolean;
+  rate?: number;
 }) {
   const router = useRouter();
   const readOnly = useReadOnly();
@@ -57,7 +59,7 @@ export default function SuggestedTransfer({
         <strong>{nameById[to]}</strong>
       </span>
       <span className="flex items-center gap-3">
-        <span className="font-semibold tabular-nums text-terracotta">{eur(amount)}</span>
+        <span className="font-semibold tabular-nums text-terracotta">{eur(amount)} <span className="text-xs text-terracotta/70">({Math.round(amount * rate).toLocaleString("pl-PL")} zł)</span></span>
         {live && (
           <button
             type="button"
