@@ -232,6 +232,11 @@ function PlanPageInner() {
     return chips.sort((a, b) => a.num - b.num);
   }, [numberedPins, planMapPins]);
 
+  const noclegChips = useMemo(
+    () => planMapPins.filter((p) => p.type === "nocleg"),
+    [planMapPins],
+  );
+
   const showMap = activeGroup.mapCities.length > 0;
 
   return (
@@ -303,8 +308,24 @@ function PlanPageInner() {
           </button>
           {mapOpen && (
             <>
-              {legendChips.length > 0 && (
+              {(noclegChips.length > 0 || legendChips.length > 0) && (
                 <div className="mb-3 flex flex-wrap gap-2">
+                  {noclegChips.map((c) => (
+                    <button
+                      key={c.name}
+                      type="button"
+                      onClick={() => setFlyToCoords([c.lat, c.lng])}
+                      className="flex items-center gap-1.5 rounded-full border border-sand-dark bg-cream px-2.5 py-0.5 text-xs text-ink transition-colors hover:border-wine/50 hover:bg-wine/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wine"
+                    >
+                      <span
+                        className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px]"
+                        style={{ backgroundColor: "#8a2f33" }}
+                      >
+                        🏠
+                      </span>
+                      <span>{c.name}</span>
+                    </button>
+                  ))}
                   {legendChips.map((c) => (
                     <button
                       key={c.name}

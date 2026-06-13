@@ -288,9 +288,10 @@ export default function PlanEntryManager({
             <button
               type="button"
               onClick={() => onPinClick?.(Number(d.lat), Number(d.lng))}
-              className="inline-flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded-full bg-sand-dark text-[11px] text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta"
+              className="inline-flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded-full text-[11px] focus:outline-none focus-visible:ring-2 focus-visible:ring-wine"
+              style={{ backgroundColor: "#8a2f33" }}
             >
-              📍
+              🏠
             </button>
           )
         ) : (
