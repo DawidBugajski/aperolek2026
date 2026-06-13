@@ -20,7 +20,6 @@ export const sections: Section[] = [
   { slug: "podsumowanie", href: "/podsumowanie", title: "Podsumowanie", short: "Podsumowanie", emoji: "📊", desc: "Koszty wg kategorii i finalne rozliczenie" },
   { slug: "pakowanie", href: "/pakowanie", title: "Pakowanie", short: "Pakowanie", emoji: "🧳", desc: "Lista wspólna i indywidualna" },
   { slug: "aplikacje", href: "/aplikacje", title: "Aplikacje", short: "Aplikacje", emoji: "📱", desc: "Co zainstalować przed wyjazdem" },
-  { slug: "mapa", href: "/mapa", title: "Mapa", short: "Mapa", emoji: "📍", desc: "Nocleg, atrakcje, knajpy" },
   { slug: "jedzenie", href: "/jedzenie", title: "Jedzenie", short: "Jedzenie", emoji: "🍝", desc: "Co koniecznie spróbować" },
   { slug: "info", href: "/info", title: "Info o Włoszech", short: "Info", emoji: "ℹ️", desc: "Praktyczne zasady i ciekawostki" },
   { slug: "sos", href: "/sos", title: "SOS / kontakty", short: "SOS", emoji: "🆘", desc: "Numery, adresy, dokumenty" },

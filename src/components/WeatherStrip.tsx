@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import type { CityWeather } from "@/lib/weather";
 
 // Drop city photos here to replace gradients:
 //   public/cities/roma.jpg
 //   public/cities/pisa.jpg
 //   public/cities/lucca.jpg
-const CITY_CONFIG: Record<string, { photo: string; gradient: string }> = {
-  Roma:  { photo: "/cities/roma.jpg",  gradient: "linear-gradient(160deg,#3B0A00 0%,#7C2D12 60%,#9A3412 100%)" },
-  Pisa:  { photo: "/cities/pisa.jpg",  gradient: "linear-gradient(160deg,#1C1200 0%,#78350F 60%,#92400E 100%)" },
-  Lucca: { photo: "/cities/lucca.jpg", gradient: "linear-gradient(160deg,#052E16 0%,#14532D 60%,#166534 100%)" },
+const CITY_CONFIG: Record<string, { photo: string; gradient: string; slug: string }> = {
+  Roma:  { photo: "/cities/roma.jpg",  gradient: "linear-gradient(160deg,#3B0A00 0%,#7C2D12 60%,#9A3412 100%)", slug: "Rzym" },
+  Pisa:  { photo: "/cities/pisa.jpg",  gradient: "linear-gradient(160deg,#1C1200 0%,#78350F 60%,#92400E 100%)", slug: "Piza" },
+  Lucca: { photo: "/cities/lucca.jpg", gradient: "linear-gradient(160deg,#052E16 0%,#14532D 60%,#166534 100%)", slug: "Lucca" },
 };
 
 const REFRESH_MS = 10 * 60 * 1000;
@@ -75,11 +76,13 @@ function CityCard({ city }: { city: CityWeather }) {
   const cfg = CITY_CONFIG[city.city] ?? {
     photo: "",
     gradient: "linear-gradient(160deg,#1C1917 0%,#44403C 100%)",
+    slug: city.city,
   };
 
   return (
-    <div
-      className="relative h-44 overflow-hidden rounded-2xl"
+    <Link
+      href={`/plan?city=${encodeURIComponent(cfg.slug)}`}
+      className="relative block h-44 cursor-pointer overflow-hidden rounded-2xl transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md"
       style={{ background: cfg.gradient }}
     >
       {/* photo layer — renders on top of gradient if file exists */}
@@ -121,6 +124,6 @@ function CityCard({ city }: { city: CityWeather }) {
           <p className="mt-1 text-sm font-medium text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">{city.desc}</p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

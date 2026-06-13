@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { sections } from "@/data/sections";
-import { trip } from "@/data/trip";
+import LogoBadge from "@/components/LogoBadge";
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -47,10 +47,10 @@ export default function NavBar() {
             </div>
             <Link
               href="/"
-              className="flex shrink-0 items-center gap-2 font-display text-xl font-bold tracking-tight text-ink"
+              className="flex shrink-0 items-center gap-2"
+              aria-label="Aperolek 2026 – strona główna"
             >
-              <span aria-hidden>🍹</span>
-              <span>{trip.title}</span>
+              <LogoBadge />
             </Link>
             <div className="flex flex-wrap items-center justify-start gap-x-4 gap-y-1.5">
               {rightItems.map((s) => (
@@ -75,10 +75,10 @@ export default function NavBar() {
         <div className="flex items-center justify-between gap-4 lg:hidden">
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-2 font-display text-xl font-bold tracking-tight text-ink"
+            className="flex shrink-0 items-center gap-2"
+            aria-label="Aperolek 2026 – strona główna"
           >
-            <span aria-hidden>🍹</span>
-            <span>{trip.title}</span>
+            <LogoBadge />
           </Link>
           <button
             type="button"
