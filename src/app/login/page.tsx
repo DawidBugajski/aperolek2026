@@ -6,9 +6,11 @@ export const metadata = { title: "Logowanie" };
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; locked?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, locked } = await searchParams;
+  const lockedMin = locked ? Math.min(Math.ceil(Number(locked) / 60), 60) : 0;
+  const isLocked = lockedMin > 0;
 
   return (
     <div className="bg-paper flex min-h-screen items-center justify-center px-4">
@@ -24,17 +26,24 @@ export default async function LoginPage({
             placeholder="Hasło"
             autoFocus
             required
-            className="w-full border-2 border-ink/30 bg-cream px-4 py-2.5 text-center text-ink focus:border-terracotta focus:outline-none"
+            disabled={isLocked}
+            className="w-full border-2 border-ink/30 bg-cream px-4 py-2.5 text-center text-ink focus:border-terracotta focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
           />
           <button
             type="submit"
-            className="w-full border-2 border-ink/40 bg-terracotta px-5 py-2.5 text-sm font-semibold uppercase tracking-wide text-cream"
+            disabled={isLocked}
+            className="w-full border-2 border-ink/40 bg-terracotta px-5 py-2.5 text-sm font-semibold uppercase tracking-wide text-cream disabled:cursor-not-allowed disabled:opacity-60"
           >
             Wejdź
           </button>
         </form>
 
-        {error && (
+        {isLocked && (
+          <p className="mt-4 text-sm text-wine">
+            Za dużo prób. Spróbuj ponownie za ~{lockedMin} min.
+          </p>
+        )}
+        {!isLocked && error && (
           <p className="mt-4 text-sm text-wine">Nieprawidłowe hasło - spróbuj jeszcze raz.</p>
         )}
       </div>
