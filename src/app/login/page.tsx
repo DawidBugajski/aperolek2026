@@ -46,6 +46,10 @@ export default async function LoginPage({
         {!isLocked && error && (
           <p className="mt-4 text-sm text-wine">Nieprawidłowe hasło - spróbuj jeszcze raz.</p>
         )}
+        <p className="mt-6 text-xs text-ink-soft">
+          Chcesz tylko zerknąć? Hasło gościa:{" "}
+          <span className="font-semibold text-ink">guest</span> (podgląd, bez edycji).
+        </p>
       </div>
     </div>
   );
