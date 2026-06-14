@@ -25,6 +25,10 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  // Skip static assets; everything else goes through the gate.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon.svg).*)"],
+  // Skip static assets and PWA entry points (SW + manifest + icons must be
+  // fetchable while logged out so install/offline works); everything else
+  // goes through the gate.
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|icon.svg|sw.js|manifest.webmanifest|apple-icon|icons/).*)",
+  ],
 };

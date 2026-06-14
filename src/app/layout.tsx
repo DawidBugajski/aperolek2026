@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { Fraunces } from "next/font/google";
 import "./globals.css";
@@ -8,6 +8,8 @@ import IdentityGate from "@/components/IdentityGate";
 import { IdentityProvider } from "@/components/IdentityProvider";
 import { ReadOnlyProvider } from "@/components/ReadOnlyProvider";
 import { ToastProvider } from "@/components/ToastProvider";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import InstallPrompt from "@/components/InstallPrompt";
 import { getRole } from "@/lib/session";
 import { trip } from "@/data/trip";
 
@@ -27,6 +29,11 @@ export const metadata: Metadata = {
   description: "Prywatne centrum dowodzenia wyjazdem do Rzymu, Pizy i Lukki.",
   // Private site — keep out of search engines.
   robots: { index: false, follow: false },
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "Aperolek" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#bf5a34",
 };
 
 export default async function RootLayout({
@@ -41,6 +48,7 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        <ServiceWorkerRegister />
         <ToastProvider>
         <ReadOnlyProvider isGuest={isGuest}>
         <IdentityProvider>
@@ -55,6 +63,7 @@ export default async function RootLayout({
               {trip.subtitle} · zrobione z 🧡 na wyjazd ekipy
             </p>
           </footer>
+          <InstallPrompt />
         </IdentityProvider>
         </ReadOnlyProvider>
         </ToastProvider>
