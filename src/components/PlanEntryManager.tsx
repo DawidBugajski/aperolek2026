@@ -269,12 +269,12 @@ export default function PlanEntryManager({
     </div>
   );
 
-  const renderItem = (d: Data) => {
+  const renderMeta = (d: Data) => {
     const text = String(d.text ?? "");
     const coords = hasCoords(d);
     const num = numberedPins.get(text.toLowerCase());
     return (
-      <div className="flex items-center gap-2 text-ink">
+      <div className="flex min-w-0 items-center gap-2">
         {coords ? (
           num != null ? (
             <button
@@ -295,15 +295,12 @@ export default function PlanEntryManager({
               🏠
             </button>
           )
-        ) : (
-          <span className="inline-block h-5 w-5 shrink-0" />
-        )}
+        ) : null}
         {d.time ? (
-          <span className="w-14 shrink-0 font-medium text-ink">{String(d.time)}</span>
+          <span className="shrink-0 font-medium text-ink">{String(d.time)}</span>
         ) : (
-          <span className="w-14 shrink-0 text-[10px] text-ink-soft/50 leading-none">bez godz.</span>
+          <span className="shrink-0 text-[10px] uppercase tracking-wide text-ink-soft/50">bez godz.</span>
         )}
-        <span className="text-sm">{text}</span>
       </div>
     );
   };
@@ -325,35 +322,38 @@ export default function PlanEntryManager({
           ) : (
             <div
               key={entry.id}
-              className="flex items-start justify-between gap-3 rounded-xl border border-sand-dark bg-white/70 px-4 py-4"
+              className="rounded-xl border border-sand-dark bg-white/70 px-4 py-4"
             >
-              <div className="min-w-0 flex-1">
-                {renderItem(entry.data)}
-                {entry.data._by ? (
-                  <span className="mt-1 block text-[11px] text-ink-soft/60">
-                    ✎ {String(entry.data._by)}
-                    {entry.data._at ? ` · ${fmtDate(String(entry.data._at))}` : ""}
-                  </span>
-                ) : null}
+              <div className="flex items-start justify-between gap-3">
+                {renderMeta(entry.data)}
+                <div className="flex shrink-0 gap-2 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => startEdit(entry)}
+                    disabled={readOnly || deletingId === entry.id}
+                    className="text-ink-soft hover:text-terracotta disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-ink-soft"
+                  >
+                    edytuj
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => remove(entry.id)}
+                    disabled={readOnly || deletingId === entry.id}
+                    className="text-ink-soft/70 hover:text-wine disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    {deletingId === entry.id ? "usuwanie…" : "usuń"}
+                  </button>
+                </div>
               </div>
-              <div className="flex shrink-0 gap-2 text-xs">
-                <button
-                  type="button"
-                  onClick={() => startEdit(entry)}
-                  disabled={readOnly || deletingId === entry.id}
-                  className="text-ink-soft hover:text-terracotta disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-ink-soft"
-                >
-                  edytuj
-                </button>
-                <button
-                  type="button"
-                  onClick={() => remove(entry.id)}
-                  disabled={readOnly || deletingId === entry.id}
-                  className="text-ink-soft/70 hover:text-wine disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  {deletingId === entry.id ? "usuwanie…" : "usuń"}
-                </button>
-              </div>
+              <p className="mt-2 text-sm leading-snug text-ink break-words">
+                {String(entry.data.text ?? "")}
+              </p>
+              {entry.data._by ? (
+                <span className="mt-1 block text-[11px] text-ink-soft/60">
+                  ✎ {String(entry.data._by)}
+                  {entry.data._at ? ` · ${fmtDate(String(entry.data._at))}` : ""}
+                </span>
+              ) : null}
             </div>
           ),
         )}
