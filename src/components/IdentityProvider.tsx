@@ -28,6 +28,8 @@ export function IdentityProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const v = localStorage.getItem(STORAGE_KEY);
+      // localStorage is read on mount (client-only) to avoid hydration mismatch.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (v) setId(v);
     } catch {
       /* ignore */

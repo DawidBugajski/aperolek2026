@@ -51,7 +51,7 @@ export default function EntryManager({
   const { identity } = useIdentity();
   const toast = useToast();
   const [entries, setEntries] = useState<Entry[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(isSupabaseConfigured);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [form, setForm] = useState<Record<string, string>>({});
@@ -71,10 +71,11 @@ export default function EntryManager({
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
-      setLoading(false);
       toast("Baza nie jest skonfigurowana.", "error");
       return;
     }
+    // Async data fetch; setState happens after await, not synchronously.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refetch();
   }, [refetch, toast]);
 

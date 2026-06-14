@@ -62,6 +62,8 @@ export default function TripMapClient() {
   }, []);
 
   useEffect(() => {
+    // Async data fetch; setState happens after await, not synchronously.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refetch();
   }, [refetch]);
 

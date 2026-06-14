@@ -133,13 +133,13 @@ export default async function BudzetPage() {
             automatycznie - nikt nic nie przeklikuje.
           </p>
           <p>
-            <strong className="text-ink">2. „Do oddania" liczy się samo.</strong> Strona pokazuje,
+            <strong className="text-ink">2. „Do oddania&quot; liczy się samo.</strong> Strona pokazuje,
             kto komu ile jest winien. Przykład: Dawid płaci 75 € za pociąg dla 4 osób → każdy ma
             udział 18,75 €, a reszta oddaje Dawidowi po 18,75 €.
           </p>
           <p>
             <strong className="text-ink">3. Zwrot dodajesz dopiero, gdy ktoś realnie odda kasę.</strong>{" "}
-            Np. Wiktoria daje Dawidowi 18,75 € → wtedy klikasz „+ Zwrot". To zapis faktycznego
+            Np. Wiktoria daje Dawidowi 18,75 € → wtedy klikasz „+ Zwrot&quot;. To zapis faktycznego
             oddania pieniędzy, a nie obowiązek dla każdego.
           </p>
           <p>

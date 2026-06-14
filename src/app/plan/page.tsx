@@ -120,6 +120,8 @@ function PlanPageInner() {
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
+    // Async data fetch; setState happens after await, not synchronously.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchDayEntries();
   }, [fetchDayEntries]);
 

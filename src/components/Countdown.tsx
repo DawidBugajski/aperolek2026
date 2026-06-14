@@ -21,6 +21,8 @@ export default function Countdown({ targetIso }: { targetIso: string }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Mount flag avoids SSR hydration mismatch for time-dependent UI.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     setRem(diff(target));
     const id = setInterval(() => setRem(diff(target)), 1000);

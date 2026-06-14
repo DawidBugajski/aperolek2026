@@ -28,7 +28,7 @@ export default function EditableChecklist({
   const toast = useToast();
   const [items, setItems] = useState<Entry[]>([]);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(isSupabaseConfigured);
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [text, setText] = useState("");
@@ -55,7 +55,6 @@ export default function EditableChecklist({
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
-      setLoading(false);
       toast("Baza nie jest skonfigurowana.", "error");
       return;
     }
